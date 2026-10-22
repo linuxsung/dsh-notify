@@ -24,6 +24,7 @@
       "ui/assets/deepseek-logo*",
       "ui/assets/preview.png",
       "ui/icons/deepseek-*.ico",
+      "ui/icons/preview.png",
       "ui/previews/**",
       "dist/*.zip",
       "dist/SHA256SUMS.txt",
