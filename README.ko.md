@@ -115,4 +115,3 @@ pwsh -NoProfile -File build\build-portable.ps1
 ## 라이선스
 
 MIT. [LICENSE](LICENSE)와 [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md)를 참고하세요. DeepSeek 명칭과 상표는 각 권리자에게 있으며, 이 프로젝트는 공식 로고/브랜드 에셋을 번들하지 않습니다.
-

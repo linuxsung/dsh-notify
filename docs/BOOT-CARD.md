@@ -30,7 +30,7 @@
 ## 작업 디렉터리
 
 ```
-C:\path\to\DSH Notify
+<local-path>
 ```
 
 새 작업창의 작업 디렉터리를 위 경로로 지정한다.
@@ -110,7 +110,7 @@ UI 변경 시 `pwsh -Sta -File ui\render-indicator.ps1 -Severity alert -Out out.
 | 공휴일 갱신 주기 | 10일 유지 → 운영 후 재판단 | `refreshHours: 240` (2026-10-20 결정). 재검토 지표: 갱신 실패 빈도, 연중 추가 공고 발생, 놓친 임시휴일로 인한 실제 혼선 |
 | 공인 IP 지역 검사 | 한다 — 하루 1회, 표시용 | 노트북은 KST 로 고정된 채 해외에 있을 수 있어 기기 시간대만으로는 현지 시각을 모른다. 판정은 UTC 고정이라 영향 없음. `Get-PeakReferenceTimeZones` 가 두 시간대·불일치를 반환 (spec §4.4) |
 | 향후 provider | 세션/작업/예약 중 우선순위 | 첫 기능 검증 후 |
-| `<legacy-prototype>` | 삭제할지 보류할지 | DSH 플러그인 초안. 이 계획에서 미사용 |
+| `<local-path>| 삭제할지 보류할지 | DSH 플러그인 초안. 이 계획에서 미사용 |
 
 ---
 

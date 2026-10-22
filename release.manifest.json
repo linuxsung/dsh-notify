@@ -1,0 +1,55 @@
+{
+  "$schema": "../release-harness/schema/release.manifest.schema.json",
+  "specVersion": "1.0",
+  "project": {
+    "id": "dsh-notify",
+    "displayName": "DSH Notify",
+    "versionSource": { "type": "package.json", "path": "plugin/package.json" },
+    "license": "MIT",
+    "homepage": "https://github.com/linuxsung/dsh-notify",
+    "repository": "https://github.com/linuxsung/dsh-notify",
+    "description": {
+      "en": "Windows off-peak widget and browser notification plugin for DeepSeek Harness.",
+      "ko": "딥시크 하네스용 Windows 할인시간대 위젯 및 브라우저 알림 플러그인."
+    }
+  },
+  "source": {
+    "root": ".",
+    "exclude": [
+      "cache/**",
+      "config.json",
+      "DSH-Notify.exe",
+      "dist/*.zip",
+      "dist/SHA256SUMS.txt",
+      ".vscode/**",
+      "*.log",
+      "*.tmp"
+    ]
+  },
+  "artifacts": [
+    {
+      "name": "DSH-Notify-Portable-{{version}}.zip",
+      "format": "zip",
+      "from": "dist/DSH-Notify-Portable"
+    }
+  ],
+  "sanitize": {
+    "assetBlacklist": [
+      { "glob": "fonts/**", "reason": "licensed font, not redistributable" }
+    ]
+  },
+  "docs": {
+    "enabled": false
+  },
+  "publish": {
+    "github": {
+      "owner": "linuxsung",
+      "repo": "dsh-notify",
+      "visibility": "public",
+      "topics": ["audio", "deepseek-harness", "dsh", "notification", "plugin"],
+      "release": {
+        "notes": "DSH Notify portable release."
+      }
+    }
+  }
+}

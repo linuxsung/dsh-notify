@@ -1,6 +1,6 @@
 {
   "name": "@nolit/dsh-notify-web",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Browser-only turn, approval, question, and error notifications for DeepSeek Harness.",
   "license": "MIT",
   "author": "nolit",
@@ -72,4 +72,3 @@
     "access": "public"
   }
 }
-

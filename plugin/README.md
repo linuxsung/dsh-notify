@@ -101,4 +101,3 @@ The tests replace browser APIs (Notification, AudioContext, localStorage, Web Lo
   - `makeOverlay()` — `shell.overlay` adapter; renders the first-use consent card and fallback toast.
 - `lib/index.js` — no-op host entry for the Loader. No communication, file, or port code.
 - UI does not use `sidebar.footer.action` or `conversation.header`.
-

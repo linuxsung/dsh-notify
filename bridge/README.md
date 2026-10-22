@@ -12,13 +12,13 @@ DeepSeek Harness 이벤트(턴 완료·승인 대기·질문 대기·오류)를 
     - id: dsh-notify-bridge
       name: '@local/dsh-notify-bridge'
       config:
-        notifyRoot: 'C:/path/to/DSH Notify'
+        notifyRoot: '<local-path>'
         onComplete: true
         onApproval: true
         onQuestion: true
         onError: true
         completeCooldownMs: 5000
-        debugLog: 'C:/path/to/DSH Notify/cache/bridge.log'
+        debugLog: '<local-path>'
 ```
 
 ## 이벤트

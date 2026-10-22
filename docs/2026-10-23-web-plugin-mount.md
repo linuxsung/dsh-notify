@@ -2,7 +2,7 @@
 
 > 상태: active · 최종 갱신: 2026-10-23 · git: main · 상위: [plugin/README.md](../plugin/README.md)
 
-- 실제 프로필: `%USERPROFILE%\.dsh\profiles\web` (`DSH_PROFILE=web`)
+- 실제 프로필: `<local-path>
 - 플러그인: `@nolit/dsh-notify-web` (`plugin/`, 로컬 링크)
 - 마운트 완료: 2026-10-23 06:0x KST
 
@@ -19,8 +19,8 @@
 ## 1. 프로필 등록
 
 ```text
-%USERPROFILE%\.dsh\profiles\web\package.json
-  dependencies["@nolit/dsh-notify-web"] = "link:C:/path/to/DSH Notify/plugin"
+<local-path>
+  dependencies["@nolit/dsh-notify-web"] = "link:<local-path>"
   dsh.profile.bundles += "@nolit/dsh-notify-web"
 ```
 
@@ -85,7 +85,7 @@ DSH Plugins 페이지에서 `DSH 알림 (웹)` 항목의 토글을 **On**으로 
 ## 5. 재현·복구
 
 ```powershell
-dsh plugin --profile web add "link:C:/path/to/DSH Notify/plugin"
+dsh plugin --profile web add "link:<local-path>"
 dsh --dump-config --profile web
 # DSH Plugins 페이지에서 DSH 알림 (웹) 토글 On
 # Settings → 알림에서 권한/소리/테스트 확인
@@ -98,5 +98,5 @@ dsh plugin --profile web remove "@nolit/dsh-notify-web"
 # 또는 Plugins 페이지에서 토글 Off
 ```
 
-백업은 `%USERPROFILE%\.dsh\profiles\web\package.json.bak-notify-*` 및
+백업은 `<local-path>
 `cordis.patch.yml.bak-notify-*`에 남겨 두었다.

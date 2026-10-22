@@ -128,6 +128,7 @@ License
 - MIT. See LICENSE.
 - No third-party font, logo, or audio file is bundled.
 '@
+$readme = $readme -replace 'v\d+\.\d+\.\d+', "v$Version"
 Set-Content -LiteralPath (Join-Path $target 'README.txt') -Value $readme -Encoding UTF8
 
 $readmeKo = @'
@@ -199,6 +200,7 @@ Chrome 재시작 요구 사항(소리가 나지 않을 때)
 - MIT. LICENSE 참조.
 - 제3자 폰트·로고·오디오 파일을 번들하지 않습니다.
 '@
+$readmeKo = $readmeKo -replace 'v\d+\.\d+\.\d+', "v$Version"
 Set-Content -LiteralPath (Join-Path $target 'README.ko.txt') -Value $readmeKo -Encoding UTF8
 
 $notices = @'
@@ -223,4 +225,3 @@ Set-Content -LiteralPath (Join-Path $OutRoot 'SHA256SUMS.txt') -Value ("{0}  {1}
 Write-Host "OK: $target"
 Write-Host "ZIP: $zip"
 Write-Host "SHA256: $hash"
-

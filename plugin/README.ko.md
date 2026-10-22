@@ -120,4 +120,3 @@ node --test .\plugin\test\client.test.mjs
 - UI는 `sidebar.footer.action`/`conversation.header`를 사용하지 않습니다.
 
 
-

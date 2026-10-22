@@ -115,4 +115,3 @@ The portable ZIP contains `README.txt` (English) and `README.ko.txt` (Korean).
 ## License
 
 MIT. See [LICENSE](LICENSE) and [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md). DeepSeek names and marks belong to their respective owners; this project bundles no official logo or brand asset.
-

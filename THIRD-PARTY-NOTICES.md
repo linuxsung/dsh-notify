@@ -10,4 +10,3 @@ The default icons are neutral clock SVG/ICO assets released by this project unde
 Users are responsible for the licensing and redistribution rights of any fonts, icons, or audio they inject.
 
 See [LICENSE](LICENSE) for the code license.
-

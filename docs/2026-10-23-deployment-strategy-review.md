@@ -518,4 +518,4 @@ powershell.exe -NoProfile -Command '(Get-Command Start-ThreadJob -ErrorAction Si
 
 - 웹 플러그인 단독 사양: [2026-10-23-web-notify-plugin-spec.md](2026-10-23-web-notify-plugin-spec.md)
 - 기존 앱 구조: [README.md](../README.md)
-- 사이드바 매니저 배포 선례: `C:\Users\<you>\Workspace\projects\dsh-workspace\dsh-sidebar-manager` (npm + `market/index.json` + `locale` + `icon.svg`)
+- 사이드바 매니저 배포 선례: `<local-path>
