@@ -1,119 +1,104 @@
 # DSH Notify Web
 
-> 상태: active · 최종 갱신: 2026-10-23 · 패키지: `@nolit/dsh-notify-web` · 상위: [README.md](../README.md)
+[한국어](README.ko.md) | English
 
-DeepSeek Harness의 턴 완료·도구 승인·질문·오류를 **브라우저 알림과 브라우저 소리**로 알리는 웹 전용 플러그인입니다. 로컬 앱, 포트, IPC, 파일 큐, 시스템 의존성이 없습니다.
+> Browser-only turn, approval, question, and error notifications for DeepSeek Harness. Package: `@nolit/dsh-notify-web@0.2.0`.
 
-## 인덱스
+## Overview
 
-| § | 섹션 | 한 줄 요약 |
-|---|---|---|
-| 1 | 동작 | DSH 이벤트 4종 → Web Notification + Web Audio |
-| 2 | 설치 | web 프로필에 링크/번들 등록 |
-| 3 | 설정 위치와 권한 | Settings → 알림, 첫 사용 동의 카드 |
-| 4 | 한계 | DSH 탭이 열려 있을 때만 동작 |
-| 4.1 | 브라우저 호환성 | Chromium 검증, Firefox/Safari 정책 제약 |
-| 5 | 프라이버시 | 네트워크/로컬 서버 없음, localStorage + IndexedDB |
-| 6 | 개발 | `node --test` |
-| 7 | 라이선스 | MIT + 사용자 주입 에셋 면책 |
-| 8 | 구조 | 헤드리스 코어 + Settings/Overlay 어댑터 |
+DSH Notify Web adds browser notifications and Web Audio chimes to DeepSeek Harness. It is a pure client plugin: no local app, port, IPC, file queue, or system dependency.
 
-## 1. 동작
-
-| DSH 이벤트 | 알림 |
+| DSH event | Notification |
 |---|---|
-| `api-session/status` (`running=false`) | 작업 완료. 루트 세션만, 5초 쿨다운 |
-| `api-session/error` | 오류. 메시지 160자 절단 |
-| `approval/request` | 승인 필요. 알림 후 즉시 `next()` 통과 |
-| `user-questions/request` | 질문 대기. 알림 후 즉시 `next()` 통과 |
+| `api-session/status` (`running=false`) | Turn complete. Root sessions only; 5-second cooldown. |
+| `api-session/error` | Error. Message truncated to 160 characters. |
+| `approval/request` | Approval needed. Notifies, then immediately calls `next()`. |
+| `user-questions/request` | Question pending. Notifies, then immediately calls `next()`. |
 
-- 여러 탭이 열려 있으면 **한 탭만** 알림을 담당합니다(Web Locks, 폴백 localStorage).
-- Notification이 거부/미지원이면 `shell.overlay`의 인페이지 토스트로 폴백합니다.
-- 소리는 Web Audio로 합성한 2음 차임이 기본입니다. 사용자가 선택한 BYO 오디오를 IndexedDB에 저장해 사용할 수 있으며, 오디오 파일을 번들하지 않습니다.
-- `agent/turn-stopping`, `agent/error`는 사용하지 않습니다(전자는 serial, 후자는 브라우저 미전달).
+- Only one tab owns notifications when several DSH tabs are open (Web Locks with a localStorage fallback).
+- If Notification is denied or unsupported, the plugin falls back to an in-page toast on `shell.overlay`.
+- The default sound is a synthesized two-tone Web Audio chime. A user-supplied audio file can be stored in IndexedDB; no audio file is bundled.
+- `agent/turn-stopping` and `agent/error` are not used: the former is serial, the latter is not delivered to the browser.
 
-## 2. 설치
+## Install
 
-로컬 체크아웃:
+Local checkout:
 
 ```powershell
-dsh plugin --profile web add "link:C:\path\to\DSH Notify\plugin"
+dsh plugin --profile web add "link:C:\path\to\dsh-notify\plugin"
 ```
 
-그 다음 web 프로필의 `dsh.profile.bundles`에 `@nolit/dsh-notify-web`이 포함되어야 합니다. DSH Plugins 페이지에서 번들을 켜도 됩니다.
+Then enable `@nolit/dsh-notify-web` in the web profile's `dsh.profile.bundles` (or from the DSH Plugins page).
 
-npm 배포 후:
+After an npm release:
 
 ```powershell
 dsh plugin --profile web add @nolit/dsh-notify-web
 ```
 
-설치 후 DSH 페이지를 새로고침합니다. `lib/client.js`가 없거나 문법 오류가 있으면 플러그인만 비활성화되고 DSH 코어는 계속 동작합니다.
+Reload the DSH page after installing. If `lib/client.js` is missing or invalid, only the plugin is disabled; the DSH core keeps running.
 
-## 3. 설정 위치와 권한
+## Settings and Permissions
 
-- **설정 → 알림**: DSH 공식 Settings 모달의 `settings.section`에 "알림" 섹션이 추가됩니다. 권한/소리/필터/BYO 오디오/테스트를 모두 여기서 설정합니다.
-- 첫 사용 시 자동으로 권한을 요청하지 않습니다. 페이지 우하단의 일회성 동의 카드에서 **알림 켜기**를 누르면 `requestPermission()`과 `AudioContext.resume()`이 같은 사용자 제스처로 실행됩니다.
-- **나중에**를 누르면 카드가 다시 뜨지 않으며, 이후 Settings → 알림에서 변경할 수 있습니다.
-- 브라우저/OS 알림 설정, 집중 지원, 탭 음소거에 따라 실제 표시/소리가 달라질 수 있습니다. 플러그인은 표시 여부를 확정할 수 없습니다.
-- DSH 포트나 도메인이 바뀌면 새 출처가 되므로 권한과 소리를 다시 활성화해야 합니다.
-- 사이드바 푸터/헤더에는 아무 UI도 추가하지 않습니다. 접힘·좁은 화면·우측 패널 상태와 무관하게 Settings에서 설정합니다.
+- **Settings → Notifications** adds a section to the official DSH Settings modal: permissions, sound, filters, BYO audio, and test notifications.
+- The plugin never requests notification permission automatically. A one-time consent card in the lower-right corner runs `requestPermission()` and `AudioContext.resume()` from the same user gesture.
+- Choosing **Later** hides the card permanently; settings remain available under Settings → Notifications.
+- Browser/OS notification settings, Focus Assist, and tab muting can still suppress display or sound. The plugin cannot guarantee delivery.
+- Changing the DSH port or origin creates a new origin; permissions and sound must be enabled again.
+- The plugin adds no sidebar footer or header UI.
 
-## 4. 한계
+## Browser Compatibility
 
-- **DSH 탭이 열려 있을 때만** 알림이 동작합니다. 탭이 닫히거나 브라우저가 discard하면 알림이 없습니다. 서비스 워커 푸시 백엔드가 없기 때문입니다.
-- 백그라운드 탭 타이머 스로틀, 브라우저 알림 정책, OS 방해 금지의 영향을 받습니다.
-- 승인/질문 알림은 DSH 승인 UI를 대체하지 않습니다. 알림을 보여주고 `next()`를 그대로 통과시킵니다.
-- 알림 본문은 고정 문구 + 세션 제목 80자입니다. 프롬프트/코드/도구 인자는 넣지 않습니다.
+Validated with Chromium-based browsers: Google Chrome, Microsoft Edge, Naver Whale, and Brave.
 
-## 4.1 🌐 브라우저 호환성 안내 (Browser Compatibility)
+- **Firefox**: strict autoplay blocking may silence asynchronous completion sounds unless site autoplay is allowed.
+- **Safari (macOS/iOS)**: background tab freezing and gesture-gated media policies can suppress background sound.
+- Other browsers are not guaranteed; Chromium-based browsers are recommended.
 
-### 공식 지원 및 검증 완료
+### Chrome restart requirement
 
-- **Chromium 계열 브라우저**: Google Chrome, Microsoft Edge, Naver Whale, Brave 등
-- OS 데스크톱 알림 배너, 고유 태그 기반 중복 드롭 방지, Web Audio 및 시스템 알림음 연동이 모두 정상 작동하도록 검증되었습니다.
+If notifications appear but sound is silent:
 
-### 미검증 및 플랫폼 제약 (Unverified / Browser Policy Limits)
+1. Open the site settings from the address-bar icon and set **Sound** to **Allow**.
+2. A normal refresh (`F5`) does not restart Chrome's background audio service. Open `chrome://restart` and let Chrome restart completely.
+3. Return to DSH and run **Test notification** in Settings → Notifications.
 
-- **Mozilla Firefox**: 브라우저 자체의 엄격한 자동 재생(Autoplay) 차단 정책으로 인해, 주소창 설정에서 '오디오 및 비디오 자동 재생 허용'을 수동으로 활성화하지 않으면 비동기 턴 완료 사운드가 무음 처리될 수 있습니다.
-- **Apple Safari (macOS / iOS)**: 백그라운드 탭 동결(Tab Freeze) 및 사용자 제스처 기반 미디어 정책으로 인해 백그라운드 사운드 출력이 제한될 수 있습니다.
-- Chromium 외 브라우저 환경은 동작을 보증하지 않으며, 안정적인 알림 수신을 위해 **Chromium 기반 브라우저 사용을 권장**합니다.
+## Limitations
 
-> **🔊 소리가 나지 않을 때 (최초 1회 브라우저 설정 및 오디오 엔진 갱신)**:
->
-> 1. 브라우저 주소창 왼쪽의 **설정(조율기/자물쇠) 아이콘** 클릭 ➔ **'사이트 설정'**
-> 2. **'소리'** 항목을 `자동(기본값)`에서 **'허용'**으로 변경
-> 3. 단순 새로고침(`F5`)으로는 크롬 백그라운드 오디오 서비스가 갱신되지 않을 수 있으므로, **주소창에 `chrome://restart`를 입력하여 브라우저를 완전히 재시작**한 뒤 사용
+- Notifications work only while a DSH tab is open. Closing or discarding the tab stops them; there is no service-worker push backend.
+- Background timer throttling, browser notification policy, and OS Do Not Disturb can delay or suppress notifications.
+- Approval/question notifications do not replace DSH approval UI; they notify and immediately pass through `next()`.
+- Notification bodies contain fixed copy plus an 80-character session title. Prompts, code, and tool arguments are not included.
 
-## 5. 프라이버시
+## Privacy
 
-- `fetch`, `XMLHttpRequest`, `WebSocket`, `EventSource`를 새로 만들지 않습니다.
-- 파일 시스템, `%LOCALAPPDATA%`, 로컬 포트, IPC를 사용하지 않습니다.
-- 설정/동의 상태는 브라우저 `localStorage`에 저장합니다.
-- 사용자 BYO 오디오 바이트는 브라우저 `IndexedDB`(`dsh-notify-web/audio`)에만 저장하며, 외부로 전송하지 않습니다.
-- 외부 링크를 열지 않습니다. 알림 클릭은 DSH 탭에 포커스만 줍니다.
+- No new `fetch`, `XMLHttpRequest`, `WebSocket`, or `EventSource` connections.
+- No filesystem, `%LOCALAPPDATA%`, local port, or IPC access.
+- Settings and consent state live in browser `localStorage`.
+- User-supplied audio bytes live only in browser `IndexedDB` (`dsh-notify-web/audio`) and are never sent outside the browser.
+- No external links are opened. Clicking a notification only focuses the DSH tab.
 
-## 6. 개발
+## Development
 
 ```powershell
 node --test .\plugin\test\client.test.mjs
 ```
 
-테스트는 브라우저 API(Notification, AudioContext, localStorage, Web Locks)를 모의 객체로 대체해 이벤트 필터/쿨다운/승인 통과/폴백/리더/설정을 검증합니다.
+The tests replace browser APIs (Notification, AudioContext, localStorage, Web Locks) with mocks and verify event filtering, cooldowns, approval pass-through, fallbacks, the tab leader, and settings.
 
-## 7. 라이선스와 에셋
+## License and Assets
 
-- 코드: MIT. [LICENSE](LICENSE) 참조.
-- 이 패키지는 폰트, 로고, 사운드 파일을 **번들하지 않습니다.** 기본 아이콘은 중립적인 시계 SVG이며, 알림에는 아이콘을 지정하지 않습니다.
-- 사용자가 별도로 주입한 폰트/아이콘/사운드의 라이선스와 재배포 권리는 전적으로 사용자에게 있습니다. 저장소의 [에셋 정책](../docs/2026-10-23-asset-policy.md)을 따릅니다.
-- DeepSeek 공식 로고/상표는 이 패키지에 포함되지 않습니다.
+- Code: MIT. See [LICENSE](LICENSE).
+- The package bundles **no fonts, logos, or sound files**. The default icon is a neutral clock SVG; notifications specify no custom icon.
+- User-supplied fonts/icons/audio remain the user's responsibility for licensing and redistribution. See the repository's [asset policy](../docs/2026-10-23-asset-policy.md).
+- No official DeepSeek logo or trademark asset is included.
 
-## 8. 구조
+## Structure
 
 - `lib/client.js`
-  - `createNotifyCore()` — React/슬롯을 모르는 헤드리스 엔진. 이벤트 필터/쿨다운/권한/Web Audio/IndexedDB/localStorage/탭 리더/토스트 큐를 담당합니다.
-  - `makeSettingsSection()` — `settings.section` 어댑터. 상태를 구독하고 폼만 렌더링합니다.
-  - `makeOverlay()` — `shell.overlay` 어댑터. 첫 사용 동의 카드와 폴백 토스트만 렌더링합니다.
-- `lib/index.js` — Loader 등록용 no-op host. 통신/파일/포트 코드가 없습니다.
-- UI는 `sidebar.footer.action`/`conversation.header`를 사용하지 않습니다.
+  - `createNotifyCore()` — headless engine independent of React/slots. Handles event filters, cooldowns, permissions, Web Audio, IndexedDB, localStorage, tab leadership, and the toast queue.
+  - `makeSettingsSection()` — `settings.section` adapter; subscribes to state and renders only the form.
+  - `makeOverlay()` — `shell.overlay` adapter; renders the first-use consent card and fallback toast.
+- `lib/index.js` — no-op host entry for the Loader. No communication, file, or port code.
+- UI does not use `sidebar.footer.action` or `conversation.header`.
 

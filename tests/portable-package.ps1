@@ -35,7 +35,7 @@ try {
     $package = Join-Path $tmp 'DSH-Notify-Portable'
     Assert-True -Condition ($LASTEXITCODE -eq 0 -and (Test-Path -LiteralPath $package)) -Label 'P1 패키지 빌드'
 
-    foreach ($relative in @('launch.js', 'start.cmd', 'core.ps1', 'config.ps1', 'app\font-loader.ps1', 'app\tray.ps1', 'ui\icons\neutral-green.ico', 'ui\icons\neutral-red.ico', 'LICENSE', 'README.txt')) {
+    foreach ($relative in @('launch.js', 'start.cmd', 'core.ps1', 'config.ps1', 'app\font-loader.ps1', 'app\tray.ps1', 'ui\icons\neutral-green.ico', 'ui\icons\neutral-red.ico', 'LICENSE', 'README.txt', 'README.ko.txt', 'THIRD-PARTY-NOTICES.md')) {
         Assert-True -Condition (Test-Path -LiteralPath (Join-Path $package $relative)) -Label "P2 $relative"
     }
 
@@ -63,3 +63,4 @@ Write-Host ''
 Write-Host "portable-package: $($script:Pass) passed / $($script:Fail) failed"
 if ($script:Fail -gt 0) { exit 1 }
 exit 0
+

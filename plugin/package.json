@@ -24,7 +24,8 @@
     "market/icons/*.svg",
     "README.md",
     "LICENSE",
-    "package.json"
+    "package.json",
+    "README.ko.md"
   ],
   "engines": {
     "node": ">=24",
@@ -71,3 +72,4 @@
     "access": "public"
   }
 }
+

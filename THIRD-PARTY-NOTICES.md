@@ -1,12 +1,13 @@
 # DSH Notify — Third-Party Notices
 
-이 패키지는 다음 에셋을 포함하지 않습니다.
+This package does not include:
 
-- Digital-7 폰트 (사용자 BYO)
-- DeepSeek 공식 로고/아이콘
-- `ding.wav` 등 오디오 파일
+- Digital-7 or other third-party fonts (BYO — bring your own)
+- Official DeepSeek logos or brand icons
+- `ding.wav` or other audio files
 
-기본 아이콘은 이 프로젝트가 MIT로 배포하는 중립 시계 SVG/ICO입니다.
-사용자가 주입한 폰트/아이콘/오디오의 라이선스 책임은 사용자에게 있습니다.
+The default icons are neutral clock SVG/ICO assets released by this project under MIT.
+Users are responsible for the licensing and redistribution rights of any fonts, icons, or audio they inject.
 
-코드 라이선스는 [LICENSE](LICENSE)를 참고하세요.
+See [LICENSE](LICENSE) for the code license.
+
